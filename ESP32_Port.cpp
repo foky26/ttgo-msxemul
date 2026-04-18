@@ -3,6 +3,13 @@
 #include <SD.h>
 #include <Arduino.h>
 
+// SD 
+#define SD_MISO 2
+#define SD_MOSI 12
+#define SD_CLK  14
+#define SD_CS   13
+
+
 #undef word
 
 extern "C" {
@@ -58,33 +65,58 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
     switch(vk) {
       // Row 0: 0-7
       case fabgl::VK_0: PRESS(0, 0x01); break;
+      case fabgl::VK_RIGHTPAREN: PRESS(0, 0x01); break; // 0
       case fabgl::VK_1: PRESS(0, 0x02); break;
+      case fabgl::VK_EXCLAIM: PRESS(0, 0x02); break;
       case fabgl::VK_2: PRESS(0, 0x04); break;
+      case fabgl::VK_AT: PRESS(0, 0x04); break;
       case fabgl::VK_3: PRESS(0, 0x08); break;
+      case fabgl::VK_HASH: PRESS(0, 0x08); break;
       case fabgl::VK_4: PRESS(0, 0x10); break;
+      case fabgl::VK_DOLLAR: PRESS(0, 0x10); break;
       case fabgl::VK_5: PRESS(0, 0x20); break;
+      case fabgl::VK_PERCENT: PRESS(0, 0x20); break;
       case fabgl::VK_6: PRESS(0, 0x40); break;
+      case fabgl::VK_CARET: PRESS(0, 0x40); break;
       case fabgl::VK_7: PRESS(0, 0x80); break;
+      case fabgl::VK_AMPERSAND: PRESS(0, 0x80); break;
       
       // Row 1: 8, 9, -, =, \, [, ], ;
       case fabgl::VK_8: PRESS(1, 0x01); break;
+      case fabgl::VK_ASTERISK: PRESS(1, 0x01); break;
+       
       case fabgl::VK_9: PRESS(1, 0x02); break;
+      case fabgl::VK_LEFTPAREN: PRESS(1, 0x02); break;
+
       case fabgl::VK_MINUS: PRESS(1, 0x04); break;
+      case fabgl::VK_UNDERSCORE: PRESS(1, 0x04); break;
       case fabgl::VK_EQUALS: PRESS(1, 0x08); break;
+       case fabgl::VK_PLUS: PRESS(1, 0x08); break;
       case fabgl::VK_BACKSLASH: PRESS(1, 0x10); break;
+      case fabgl::VK_VERTICALBAR: PRESS(1, 0x10); break;
       case fabgl::VK_LEFTBRACKET: PRESS(1, 0x20); break;
       case fabgl::VK_RIGHTBRACKET: PRESS(1, 0x40); break;
+      case fabgl::VK_LEFTBRACE: PRESS(1, 0x20); break;
+      case fabgl::VK_RIGHTBRACE: PRESS(1, 0x40); break;
       case fabgl::VK_SEMICOLON: PRESS(1, 0x80); break;
+      case fabgl::VK_COLON: PRESS(1, 0x80); break;
 
       // Row 2: ', `, ,, ., /, Dead, A, B
       case fabgl::VK_QUOTE: PRESS(2, 0x01); break;
+      case fabgl::VK_QUOTEDBL: PRESS(2, 0x01); break;
       case fabgl::VK_GRAVEACCENT: PRESS(2, 0x02); break;
+      case fabgl::VK_TILDE: PRESS(2, 0x02); break;
       case fabgl::VK_COMMA: PRESS(2, 0x04); break;
+      case fabgl::VK_LESS: PRESS(2, 0x04); break;
       case fabgl::VK_PERIOD: PRESS(2, 0x08); break;
       case fabgl::VK_SLASH: PRESS(2, 0x10); break;
+      case fabgl::VK_QUESTION: PRESS(2, 0x10); break;
       // Dead key는 스킵
       case fabgl::VK_A: PRESS(2, 0x40); break;
       case fabgl::VK_B: PRESS(2, 0x80); break;
+
+      case fabgl::VK_a: PRESS(2, 0x40); break;
+      case fabgl::VK_b: PRESS(2, 0x80); break;
 
       // Row 3: C, D, E, F, G, H, I, J
       case fabgl::VK_C: PRESS(3, 0x01); break;
@@ -96,6 +128,15 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_I: PRESS(3, 0x40); break;
       case fabgl::VK_J: PRESS(3, 0x80); break;
 
+      case fabgl::VK_c: PRESS(3, 0x01); break;
+      case fabgl::VK_d: PRESS(3, 0x02); break;
+      case fabgl::VK_e: PRESS(3, 0x04); break;
+      case fabgl::VK_f: PRESS(3, 0x08); break;
+      case fabgl::VK_g: PRESS(3, 0x10); break;
+      case fabgl::VK_h: PRESS(3, 0x20); break;
+      case fabgl::VK_i: PRESS(3, 0x40); break;
+      case fabgl::VK_j: PRESS(3, 0x80); break;
+
       // Row 4: K, L, M, N, O, P, Q, R
       case fabgl::VK_K: PRESS(4, 0x01); break;
       case fabgl::VK_L: PRESS(4, 0x02); break;
@@ -106,6 +147,16 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_Q: PRESS(4, 0x40); break;
       case fabgl::VK_R: PRESS(4, 0x80); break;
 
+      case fabgl::VK_k: PRESS(4, 0x01); break;
+      case fabgl::VK_l: PRESS(4, 0x02); break;
+      case fabgl::VK_m: PRESS(4, 0x04); break;
+      case fabgl::VK_n: PRESS(4, 0x08); break;
+      case fabgl::VK_o: PRESS(4, 0x10); break;
+      case fabgl::VK_p: PRESS(4, 0x20); break;
+      case fabgl::VK_q: PRESS(4, 0x40); break;
+      case fabgl::VK_r: PRESS(4, 0x80); break;
+
+
       // Row 5: S, T, U, V, W, X, Y, Z
       case fabgl::VK_S: PRESS(5, 0x01); break;
       case fabgl::VK_T: PRESS(5, 0x02); break;
@@ -115,6 +166,15 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_X: PRESS(5, 0x20); break;
       case fabgl::VK_Y: PRESS(5, 0x40); break;
       case fabgl::VK_Z: PRESS(5, 0x80); break;
+
+      case fabgl::VK_s: PRESS(5, 0x01); break;
+      case fabgl::VK_t: PRESS(5, 0x02); break;
+      case fabgl::VK_u: PRESS(5, 0x04); break;
+      case fabgl::VK_v: PRESS(5, 0x08); break;
+      case fabgl::VK_w: PRESS(5, 0x10); break;
+      case fabgl::VK_x: PRESS(5, 0x20); break;
+      case fabgl::VK_y: PRESS(5, 0x40); break;
+      case fabgl::VK_z: PRESS(5, 0x80); break;
 
       // Row 6: SHIFT, CTRL, GRAPH, CAPS, CODE, F1, F2, F3
       case fabgl::VK_LSHIFT: 
@@ -159,6 +219,7 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_KP_7: PRESS(0, 0x80); break; // 7
       case fabgl::VK_KP_8: PRESS(1, 0x01); break; // 8
       case fabgl::VK_KP_9: PRESS(1, 0x02); break; // 9
+      
 
       // 텐키 기호 매핑
       case fabgl::VK_KP_MULTIPLY: PRESS(2, 0x80); break; // * -> :
@@ -166,6 +227,7 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_KP_MINUS: PRESS(1, 0x04); break;    // -
       case fabgl::VK_KP_DIVIDE: PRESS(2, 0x10); break;   // /
       case fabgl::VK_KP_PERIOD: PRESS(2, 0x08); break;   // .
+      case fabgl::VK_GREATER: PRESS(2, 0x08); break;
 
       // 종료 키
       case fabgl::VK_F12: ExitNow = 1; break;
@@ -177,32 +239,58 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
     switch(vk) {
       // Row 0
       case fabgl::VK_0: RELEASE(0, 0x01); break;
+      case fabgl::VK_RIGHTPAREN: RELEASE(0, 0x01); break; // 0
       case fabgl::VK_1: RELEASE(0, 0x02); break;
+      case fabgl::VK_EXCLAIM: RELEASE(0, 0x02); break;
+     
       case fabgl::VK_2: RELEASE(0, 0x04); break;
+      case fabgl::VK_AT: RELEASE(0, 0x04); break;
       case fabgl::VK_3: RELEASE(0, 0x08); break;
+      case fabgl::VK_HASH: RELEASE(0, 0x08); break;
       case fabgl::VK_4: RELEASE(0, 0x10); break;
+      case fabgl::VK_DOLLAR: RELEASE(0, 0x10); break;
       case fabgl::VK_5: RELEASE(0, 0x20); break;
+      case fabgl::VK_PERCENT: RELEASE(0, 0x20); break;
       case fabgl::VK_6: RELEASE(0, 0x40); break;
+      case fabgl::VK_CARET: RELEASE(0, 0x40); break;
       case fabgl::VK_7: RELEASE(0, 0x80); break;
-      
+      case fabgl::VK_AMPERSAND: RELEASE(0, 0x80); break;
       // Row 1
       case fabgl::VK_8: RELEASE(1, 0x01); break;
+      case fabgl::VK_ASTERISK: RELEASE(1, 0x01); break;
       case fabgl::VK_9: RELEASE(1, 0x02); break;
+      case fabgl::VK_LEFTPAREN: RELEASE(1, 0x02); break;
+
       case fabgl::VK_MINUS: RELEASE(1, 0x04); break;
+      case fabgl::VK_UNDERSCORE: RELEASE(1, 0x04); break;
       case fabgl::VK_EQUALS: RELEASE(1, 0x08); break;
+      case fabgl::VK_PLUS: RELEASE(1, 0x08); break;
       case fabgl::VK_BACKSLASH: RELEASE(1, 0x10); break;
+      case fabgl::VK_VERTICALBAR: RELEASE(1, 0x10); break;
+     
       case fabgl::VK_LEFTBRACKET: RELEASE(1, 0x20); break;
       case fabgl::VK_RIGHTBRACKET: RELEASE(1, 0x40); break;
+      case fabgl::VK_LEFTBRACE: RELEASE(1, 0x20); break;
+      case fabgl::VK_RIGHTBRACE: RELEASE(1, 0x40); break;
       case fabgl::VK_SEMICOLON: RELEASE(1, 0x80); break;
+      case fabgl::VK_COLON: RELEASE(1, 0x80); break;
 
       // Row 2
       case fabgl::VK_QUOTE: RELEASE(2, 0x01); break;
+      case fabgl::VK_QUOTEDBL: RELEASE(2, 0x01); break;
       case fabgl::VK_GRAVEACCENT: RELEASE(2, 0x02); break;
+      case fabgl::VK_TILDE: RELEASE(2, 0x02); break;
       case fabgl::VK_COMMA: RELEASE(2, 0x04); break;
+       case fabgl::VK_LESS: RELEASE(2, 0x04); break;
       case fabgl::VK_PERIOD: RELEASE(2, 0x08); break;
+      case fabgl::VK_GREATER: RELEASE(2, 0x08); break;
+       
       case fabgl::VK_SLASH: RELEASE(2, 0x10); break;
+      case fabgl::VK_QUESTION: RELEASE(2, 0x10); break;
       case fabgl::VK_A: RELEASE(2, 0x40); break;
       case fabgl::VK_B: RELEASE(2, 0x80); break;
+      case fabgl::VK_a: RELEASE(2, 0x40); break;
+      case fabgl::VK_b: RELEASE(2, 0x80); break;
 
       // Row 3
       case fabgl::VK_C: RELEASE(3, 0x01); break;
@@ -214,6 +302,15 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_I: RELEASE(3, 0x40); break;
       case fabgl::VK_J: RELEASE(3, 0x80); break;
 
+      case fabgl::VK_c: RELEASE(3, 0x01); break;
+      case fabgl::VK_d: RELEASE(3, 0x02); break;
+      case fabgl::VK_e: RELEASE(3, 0x04); break;
+      case fabgl::VK_f: RELEASE(3, 0x08); break;
+      case fabgl::VK_g: RELEASE(3, 0x10); break;
+      case fabgl::VK_h: RELEASE(3, 0x20); break;
+      case fabgl::VK_i: RELEASE(3, 0x40); break;
+      case fabgl::VK_j: RELEASE(3, 0x80); break;
+
       // Row 4
       case fabgl::VK_K: RELEASE(4, 0x01); break;
       case fabgl::VK_L: RELEASE(4, 0x02); break;
@@ -224,6 +321,15 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_Q: RELEASE(4, 0x40); break;
       case fabgl::VK_R: RELEASE(4, 0x80); break;
 
+      case fabgl::VK_k: RELEASE(4, 0x01); break;
+      case fabgl::VK_l: RELEASE(4, 0x02); break;
+      case fabgl::VK_m: RELEASE(4, 0x04); break;
+      case fabgl::VK_n: RELEASE(4, 0x08); break;
+      case fabgl::VK_o: RELEASE(4, 0x10); break;
+      case fabgl::VK_p: RELEASE(4, 0x20); break;
+      case fabgl::VK_q: RELEASE(4, 0x40); break;
+      case fabgl::VK_r: RELEASE(4, 0x80); break;
+
       // Row 5
       case fabgl::VK_S: RELEASE(5, 0x01); break;
       case fabgl::VK_T: RELEASE(5, 0x02); break;
@@ -233,6 +339,15 @@ void ProcessKey(fabgl::VirtualKey vk, bool down) {
       case fabgl::VK_X: RELEASE(5, 0x20); break;
       case fabgl::VK_Y: RELEASE(5, 0x40); break;
       case fabgl::VK_Z: RELEASE(5, 0x80); break;
+
+      case fabgl::VK_s: RELEASE(5, 0x01); break;
+      case fabgl::VK_t: RELEASE(5, 0x02); break;
+      case fabgl::VK_u: RELEASE(5, 0x04); break;
+      case fabgl::VK_v: RELEASE(5, 0x08); break;
+      case fabgl::VK_w: RELEASE(5, 0x10); break;
+      case fabgl::VK_x: RELEASE(5, 0x20); break;
+      case fabgl::VK_y: RELEASE(5, 0x40); break;
+      case fabgl::VK_z: RELEASE(5, 0x80); break;
 
       // Row 6
       case fabgl::VK_LSHIFT: 
@@ -317,6 +432,10 @@ fabgl::RGB888 msxColor(uint8_t c) {
 int InitMachine(void) {
   Serial.println("InitMachine: Starting...");
   
+
+
+
+
   // 객체 연결 및 포인터 설정
   vga16 = &VGAController;
 
@@ -382,10 +501,13 @@ void DrawSprites(byte Y, byte *LineBuffer) {
   int Size = (VDP[1] & 2) ? 16 : 8;
   int Mag  = (VDP[1] & 1); 
 
-  for (int i = 0; i < 32; i++) {
+  for (int i = 31; i >=0; i--) {
+
+   
+
     byte *Attr = SprTab + i * 4;
     int Sy = Attr[0];
-    if (Sy == 208) break; 
+    if (Sy != 208) { 
 
     if (Sy > 240) Sy -= 256;
     Sy++;
@@ -424,7 +546,12 @@ void DrawSprites(byte Y, byte *LineBuffer) {
         }
       }
     }
+ 
+    }
+ 
   }
+
+
 }
 
 void RefreshLine0(byte Y) {
@@ -586,4 +713,4 @@ extern "C" {
     File* f = (File*)stream;
     return !f->available();
   }
-}
+}  
