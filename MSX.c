@@ -396,6 +396,11 @@ static void FreeAllMemory(void)
 /*************************************************************/
 int StartMSX(int NewMode,int NewRAMPages,int NewVRAMPages)
 {
+
+  
+
+
+
   /*** Joystick types: ***/
   static const char *JoyTypes[] =
   {
@@ -630,7 +635,13 @@ int StartMSX(int NewMode,int NewRAMPages,int NewVRAMPages)
   }
 
   /* Start execution of the code */
+  
+  SetAudio(22050, 127);
+     
+  
   if(Verbose) printf("RUNNING ROM CODE...\n");
+
+
   A=RunZ80(&CPU);
 
   /* Exiting emulation... */
@@ -699,6 +710,13 @@ void TrashMSX(void)
 /*************************************************************/
 int ResetMSX(int NewMode,int NewRAMPages,int NewVRAMPages)
 {
+
+
+
+
+
+
+
   /*** VDP status register states: ***/
   static const byte VDPSInit[16] = { 0x9F,0,0x6C,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
