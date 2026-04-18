@@ -3,8 +3,13 @@
  * Based on fMSX by Marat Fayzullin and FabGL by Fabrizio Di Vittorio.
  */
 
+
+
+
 #include "fabgl.h"
 #include "MSX.h"
+
+
 #include <SPI.h>
 #include <SD.h>
 #include <vector> // 파일 목록 관리를 위해 vector 사용 (필요시)
@@ -14,6 +19,7 @@
 fabgl::VGA16Controller VGAController;
 fabgl::PS2Controller PS2Controller;
 fabgl::Canvas        *Canvas;
+
 
 #include "esp32-hal-psram.h"
 extern "C" {
@@ -33,6 +39,7 @@ extern "C" {
   extern const char *ProgDir;
   extern byte Verbose;
   extern  int SetAudio(int, int);
+  extern void StopAudio();
 }
 
 // ESP32-MSX 브릿지
@@ -57,9 +64,12 @@ const int ITEMS_PER_PAGE = 25;  // 한 화면에 보여줄 항목 수
 void setup() {
   setCpuFrequencyMhz(240);
   Serial.begin(115200);
+  
   delay(1000);
 
   Serial.println("\n\n=== MSX Emulator Starting ===");
+  
+  
 
   // PSRAM 초기화 확인
   if (psramInit()) {
@@ -141,6 +151,12 @@ void loop() {
   if (emuRunning) {
     Serial.println("Starting MSX emulation...");
     Canvas->clear(); 
+     VGAController.setResolution(VGA_320x200_60HzD);
+
+     // 사운드 시스템 초기화
+
+
+
 
     // StartMSX 호출
     int result = StartMSX(Mode, RAMPages, VRAMPages);
@@ -149,11 +165,14 @@ void loop() {
     emuRunning = false;
     
     // 해상도 및 상태 재설정
-    VGAController.setResolution(VGA_512x384_60Hz);
+    
     Canvas->clear();
     
     TrashMachine();
     InitMachine();
+    
+    VGAController.setResolution(VGA_512x384_60Hz);
+    
     
     runFileBrowser();
   }
@@ -162,6 +181,10 @@ void loop() {
 
 // 개선된 파일 브라우저 (스크롤 기능 + 키 반복 방지)
 void runFileBrowser() {
+
+  StopAudio();
+ 
+
   File root = SD.open("/");
   if(!root) {
     Canvas->drawText(10, 50, "Failed to open root");
@@ -287,9 +310,11 @@ void runFileBrowser() {
             ROMName[1] = 0; 
             Canvas->clear();
             Canvas->drawText(10, 10, "Booting MSX BASIC...");
+            
           } else {
             int fileIdx = selected - 1;
             Serial.printf("Loading ROM: %s\n", files[fileIdx].c_str());
+            
             static char fileNameBuffer[64];
             String path = "/" + files[fileIdx];
             strncpy(fileNameBuffer, path.c_str(), sizeof(fileNameBuffer)-1);
